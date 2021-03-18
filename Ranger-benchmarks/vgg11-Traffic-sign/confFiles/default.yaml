@@ -1,0 +1,66 @@
+# This is a sample YAML file for fault injection configuration
+# The fields here should correspond to the Fields in fiConfig.py
+
+# Deterministic fault seed for the injections
+# Seed: 1000
+
+# Type of fault to be injected for Scalars and Tensors
+# Allowed values are {None, Rand, Zero, Rand-element, bitFlip-element, bitFlip-tensor, binaryBitFlip, sequentialBitFlip}
+
+ScalarFaultType: None
+#TensorFaultType: None
+TensorFaultType: bitFlip-element
+
+
+# Add the list of Operations and their probabilities here
+# Each entry must be in a separate line ad start with a '-'
+# each line must represent an OP and it's probability value
+# See fiConfig.py for a full list of allowed OP values
+# NOTE: These should not be any tabs anywhere below
+
+Ops:
+ - CONV2D = 1.0 # Chooses all operations
+ - ADD = 1.0
+ - RELU = 1.0
+ - MAX-POOL = 1.
+ - RESHAPE = 1.
+ - MATMUL = 1.
+ 
+#  - LRN = 1.0
+# - EQUAL = 1.0
+#  - SOFT-MAX = 1.0
+# - DIV = 0.0 # This does not exist - and should be ignored (Test)
+# - SUB = -0.5 # This should raise an exception
+
+# How many times the set of above operations should be skipped before injection
+# SkipCount: 1
+
+Instances:
+#  - ADD = 3
+#  - MATMUL = 1
+#  - ABSOLUTE = 1
+#  - NEGATIVE = 1
+#  - SUM = 1
+#  - ARGMIN = 1
+
+  - CONV2D = 8
+  - MAX-POOL = 4
+  - RELU = 10
+  - RESHAPE = 1
+  - ADD = 11
+  - MATMUL = 3 
+
+
+
+# There are three inject mode:
+# There are 3 ways to determine HOW to select an operation for injection"
+# 1) Using error rate to determine the probability of each opertaor to be injected " 
+# 2) Profiling the instance of each operation so that each operation will be injected for ONCE only" 
+# 3) Perform random injection over one op per run". In this mode, the 'ALL' variable in the Ops section must be claimed explicitly. 
+# In the second and third mode, you'll need to specify the instances of all the operators in the algorithm
+
+# Allowed values: 1) "errorRate"; 2) "dynamicInstance"; 3) "oneFaultPerRun" 
+InjectMode: "oneFaultPerRun"
+#InjectMode: "dynamicInstance"
+
+

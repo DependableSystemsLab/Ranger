@@ -1,0 +1,56 @@
+# This is a sample YAML file to configure automated insertion of range restriction operators in TF program
+
+
+# Param for automated transformaiton 
+# Provide the name of different operators (this is the default setting)
+# 
+act :  "Relu" 
+op_follow_act:
+  - "MaxPool"
+  - "Reshape"
+  - "AvgPool"
+special_op_follow_act : "concat"
+
+# Below are the bounding values for the Nvidia-Dave driving model
+# Upper bound 
+up_bound :
+ - 2.8 
+ - 26.  
+ - 39. 
+ - 94. 
+ - 164. 
+ - 562. 
+ - 2538. 
+ - 2368. 
+ - 2431. 
+
+# Lower bound
+low_bound : 
+ - 0.
+ - 0. 
+ - 0.
+ - 0. 
+ - 0.
+ - 0.
+ - 0.
+ - 0.
+ - 0. 
+
+# specify the variable name of the original session
+# this will be replaced with the new graph after insertion
+# you can refer to the original session via OLD_SESS in the program
+org_sess_name : "sess" 
+
+# specify all the variable name that will be used in the new graphs
+# these variables will be replaced with the ones under the New graph so that they can be evaluated in the new graph
+# For example: OP_FOR_EVAL = sess.run(OP_FOR_EVAL, feed_dict{ INPUT_x: .., INPUT_keep_prob: .. } )  
+op_in_new_graph:
+ - "OP_FOR_EVAL"
+ - "INPUT_x"
+ - "INPUT_keep_prob"
+ 
+
+
+
+
+

@@ -1,0 +1,36 @@
+# This is a sample YAML file to profile the value for the restriction values
+
+
+act :  "Relu" # Name of the operator, from which we can to profile the value
+percentage_of_img : 0.2   # percentage of image for profiling
+
+# choose restriction value from the value distribution
+# E.g., 1.0 means the maximal value;
+#       0.99 means the value covering 99\% of the sampling values
+restriction_val : 1.0 
+
+
+# save the raw value from the ACT layer.
+# False will save the maximal value from each layer to reduce the size of the data file
+# False is recommended
+save_raw_data : False 
+
+x_data : "xs" # variable that contains the images
+
+
+sess_name : "sess"
+
+# feed dict values for inference. 
+# Provide the default value / variable for all the non-input tensors, e.g., model.keep_prob below
+# this is the feed_dict values for the Dave model. Change to it your own model
+feed_dict :
+  - model.x : 'dummy' # `dummy` is a dummy value, will be replaced in the acutal code
+  - model.keep_prob : 1.0
+
+
+
+
+
+
+
+
