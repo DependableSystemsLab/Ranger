@@ -11,7 +11,7 @@ This repo lists the benchmarks and fault injection tool used in the Ranger paper
 
   * You'll first need to install TensorFI (see https://github.com/DependableSystemsLab/TensorFI).
   * Then also install opencv and keras.
-  * We recommend using condo for installation.
+  * We recommend using conda for installation.
 
 ## Implementation of Ranger
 
