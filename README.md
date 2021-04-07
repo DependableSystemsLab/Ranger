@@ -4,7 +4,7 @@ This repo lists the benchmarks and fault injection tool used in the Ranger paper
 
 - /TensorFI includes the fault injection tool (TensorFI). We've made some changes to the tool (mainly in /TensorFI/injectFault.py), to support the capability of injection in all the benchmarks we've used. 
 - /Ranger-benchmarks contains all the DNN benchmarks and experimental infrastructure.
-- /dave-driving contains a sample DNN benchmark where we've provided the scripts to automate the deployment of Ranger.
+- /dave-driving contains a sample DNN benchmark where we've provided the scripts to automate the deployment of Ranger. More details are available in README file in the /dave-driving directory.
 
 
 ## Installation
