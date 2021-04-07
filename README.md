@@ -17,7 +17,7 @@ This repo lists the benchmarks and fault injection tool used in the Ranger paper
 
 We provide different ways to implement Ranger.
 
-1. You can use the script */Ranger-benchmarks/auto-trans/auto-transoform.py* to automatically transform the TensorFlow graph to insert the operators for range restriction. Template for each model is also provided under the same directory.
+1. You can use the script */Ranger-benchmarks/auto-trans/auto-transform.py* to automatically transform the TensorFlow graph to insert the operators for range restriction. Template for each model is also provided under the same directory.
 
 2. You can also manually insert the restriction operators into the source program where you define the model. See */Ranger-benchmarks/vgg16-Imagenet/bounded-vgg16-model-def.py* for an example.
 
