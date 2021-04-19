@@ -2,9 +2,9 @@
 
 This repo lists the benchmarks and fault injection tool used in the Ranger paper.
 
-- /TensorFI includes the fault injection tool (TensorFI). We've made some changes to the tool (mainly in /TensorFI/injectFault.py), to support the capability of injection in all the benchmarks we've used. 
-- /Ranger-benchmarks contains all the DNN benchmarks and experimental infrastructure.
-- /dave-driving contains a sample DNN benchmark where we've provided the scripts to automate the deployment of Ranger. More details are available in README file in the /dave-driving directory.
+- */TensorFI* includes the fault injection tool (TensorFI). We've made some changes to the tool (mainly in */TensorFI/injectFault.py*), to support the capability of injection in all the benchmarks we've used. 
+- */Ranger-benchmarks* contains all the DNN benchmarks and experimental infrastructure.
+- */dave-driving* contains a sample DNN benchmark where we've provided the scripts to automate the deployment of Ranger. More details are available in README file in the */dave-driving* directory.
 
 
 ## Installation
@@ -17,7 +17,7 @@ This repo lists the benchmarks and fault injection tool used in the Ranger paper
 
 We provide different ways to implement Ranger.
 
-1. You can use the script /Ranger-benchmarks/auto-trans/auto-transform.py to automatically transform the TensorFlow graph to insert the operators for range restriction. Template for each model is also provided under the same directory.
+1. You can use the script */Ranger-benchmarks/auto-trans/auto-transform.py* to automatically transform the TensorFlow graph to insert the operators for range restriction. Template for each model is also provided under the same directory.
 
 2. You can also manually insert the restriction operators into the source program where you define the model. See */Ranger-benchmarks/vgg16-Imagenet/bounded-vgg16-model-def.py* for an example.
 
@@ -31,7 +31,7 @@ We provide different ways to implement Ranger.
 5		return output
 ```
 
-In the above example, we can simulate Ranger in TensorFI, but not on the source TensorFlow program. This is done in /TensorFI/injectFault.py. See an example in /Ranger-benchmarks/LeNet-mnist/injectFault.py
+In the above example, we can simulate Ranger in TensorFI, but not on the source TensorFlow program. This is done in */TensorFI/injectFault.py*. See an example in */Ranger-benchmarks/LeNet-mnist/injectFault.py*
 
 Currently, the injectFault.py is customized to different models and they can be found in each model's directory.
 
@@ -45,21 +45,22 @@ To calculate the SDC rates you can use the log files written during the fault in
 
 
 ## Evaluation of Ranger
-(The following commands use the LeNet model and assume you're under the following directory: /Ranger-benchmarks/LeNet-mnist/)
+(The following commands use the LeNet model and assume you're under the following directory: */Ranger-benchmarks/LeNet-mnist/*)
 
 
 ### 1. To evaluate the effectiveness in improving the DNN's error resilience
+
+You can compare the SDC rate of the model before and after deploying Ranger.
+
 ```
 python FI-lenet-org.py
 python FI-lenet-ranger.py
 ```
-You can compare the SDC rate of the model before and after deploying Ranger.
-
-In the LeNet example, you can compare the SDC rates in lenet-randomFI-org.csv and lenet-randomFI-ranger.csv
+In the LeNet example, the SDC rates are saved in *lenet-randomFI-org.csv* and *lenet-randomFI-ranger.csv*
 
 ### 2. To evaluate the impact of Ranger on accuracy
 
-Evaluate the accuracy of the model (with Ranger inserted) on the validation set. The same way as you do to evaluate the common model.
+Evaluate the accuracy of the model (with Ranger inserted) on the validation set. The same way as you do to evaluate common model.
 
 ```
 python lenet-accuracy-org.py
@@ -70,7 +71,7 @@ You can compare the accuracy of the model before and after deploying Ranger.
 
 ### 3. To evaluate the overhead of Ranger
 
-We evaluate it in terms of FLOPs. The script to evaluate the FLOPs of model with and without Ranger is in /Ranger-benchmarks/auto-trans/overhead-measurement.py. 
+We evaluate it in terms of FLOPs. The script to evaluate the FLOPs of model with and without Ranger is in */Ranger-benchmarks/auto-trans/overhead-measurement.py*. 
 
 ```
 python lenet-ranger-overhead.py
@@ -79,7 +80,7 @@ You can compare the FLOPs of the model before and after deploying Ranger.
 
 ### 4. To evaluate the effectiveness of Ranger under models using reduced-precision datatype
 
-Replace the current benchmark_folder/TensorFI/faultTypes.py with benchmark_folder/TensorFI/16-bit-faultTypes.py and then perform fault injection as before.
+Replace the contents in *benchmark_folder/TensorFI/faultTypes.py* with those in *benchmark_folder/TensorFI/16-bit-faultTypes.py* (the file name unchanged) and then perform fault injection as before.
 
 ```
 # In the LeNet example, the default setup is provided so you don't need to replace the file manually. 
@@ -87,10 +88,11 @@ Replace the current benchmark_folder/TensorFI/faultTypes.py with benchmark_folde
 python FI-lenet-org-16bit.py
 python FI-lenet-ranger-16bit.py
 ```
+In the LeNet example, the SDC rates are saved in *lenet-randomFI-org-16bit.csv* and *lenet-randomFI-ranger-16bit.csv*
 
 ### 5. To evaluate the effectiveness of Ranger against multi-bit flips
 
-Change the variable ```numOfCurrFault``` in benchmark_folder/TensorFI/faultTypes.py and benchmark_folder/TensorFI_ranger/faultTypes.py, e.g., ```numOfCurrFault=2``` to enable 2-bit injection per inference. And then you can perform injection experiment as before.
+Change the variable ```numOfCurrFault``` in *benchmark_folder/TensorFI/faultTypes.py* and *benchmark_folder/TensorFI_ranger/faultTypes.py*, e.g., ```numOfCurrFault=2``` to enable 2-bit injection per inference. And then you can perform injection experiment as before.
 
 ```
 # In the LeNet example, the default setup for 2-bit injection is provided so you don't need to modify the variable manually. 
@@ -98,6 +100,9 @@ Change the variable ```numOfCurrFault``` in benchmark_folder/TensorFI/faultTypes
 python FI-lenet-org-multi-bit.py
 python FI-lenet-ranger-multi-bit.py
 ```
+
+In the LeNet example, the SDC rates are saved in *lenet-randomFI-org-multiBit.csv* and *lenet-randomFI-ranger-multiBit.csv*
+
 
 ## Paper
 If you find the repo useful, please cite the following paper: 
