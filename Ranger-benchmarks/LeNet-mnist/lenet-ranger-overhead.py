@@ -1,8 +1,3 @@
-# this file contains automated transformation to insert Ranger into the model,
-#  and then perform fault injection experiment to evaluate the effectiveness of Ranger (in terms of SDC rate)
-
-
-
 #!/usr/bin/python
 
 # Copyright 2015 The TensorFlow Authors. All Rights Reserved.
@@ -693,8 +688,6 @@ def main(_):
   "============================================================================================================" 
   "============================================================================================================"
 
-
-
   global eval_prediction
   OP_FOR_EVAL = eval_prediction # op to be eval
   new_op_for_eval_name = get_op_with_prefix(OP_FOR_EVAL.op.name, graph_dup_cnt, PREFIX, dummy_graph_dup_cnt, DUMMY_PREFIX) 
@@ -707,71 +700,61 @@ def main(_):
   eval_data = sess.graph.get_tensor_by_name( get_op_with_prefix(eval_data.op.name, graph_dup_cnt, PREFIX, dummy_graph_dup_cnt, DUMMY_PREFIX) + ":0")
 
 
-  # you can call this function to check the depenency of the final operator
-  # you should see the bouding ops are inserted into the dependency
-  # NOTE: the printing might contain duplicated output
-  #get_op_dependency(new_op_for_eval.op)
+  "Insert this AFTER inserting range check into the original graph (Tested under TF 1.14)"
+  "this will get the FLOPs of the target op in the original and new graph"
+  "NOTE: you need to set the shape of the input op (placeholder) to be constant value, cannot set \"None\" otherwise the FLOPs cannot be obtained due to incomplete shape "
 
-  # we use the inputs that can be correctly identified by the model for FI
-  test_error, indexOfCorrectSample = error_rate(eval_in_batches(test_data, sess), test_labels, True)
-  print('Test error: %.1f%%' % test_error)
+  "Measure the FLOPs before and after inserting range restriction"
+  from tensorflow.python.framework import graph_util
+  "This is to get the FLOPS in the model"
+  def load_pb(pb):
+      with tf.gfile.GFile(pb, "rb") as f:
+          graph_def = tf.GraphDef()
+          graph_def.ParseFromString(f.read())
+      with tf.Graph().as_default() as graph:
+          tf.import_graph_def(graph_def, name='')
+          return graph
 
-  
-  if FLAGS.self_test:
-    print('test_error', test_error)
-    assert test_error == 0.0, 'expected 0.0 test_error, got %.2f' % (
-        test_error,)
-  print("index of samples correctly learned by the model: \n",indexOfCorrectSample[:20]) 
-  newData = []
-  newLab = []
+  # get the FLOPs of the new graph
+  g = tf.get_default_graph()  #sess.graph()
+  output_graph_def = graph_util.convert_variables_to_constants(sess, g.as_graph_def(), [new_op_for_eval_name])
 
-
-  
-  # save FI results into file, "eachRes" saves each FI result, "resFile" saves SDC rate
-  if not os.path.isdir("./reluRes"):
-   os.mkdir("./reluRes")
-  eachRes = open("./reluRes/relu-lenet-eachFI.csv", "a")
-  resFile = open("./reluRes/relu-lenet-randomFI.csv", "a")
-
-  # Add the fault injection nodes to it
-  fi = ti.TensorFI(sess, logLevel = 50, name = "convolutional", disableInjections=False)
-
-  
-  "Here we choose the first 10 correctly-classified samples for injection"
-  "You can also choose any other inputs for injection"
-  index = range(10) # inject fault to the first 10 inputs
-
-  for i in index:
+  with tf.gfile.GFile('graph.pb', "wb") as f:
+      f.write(output_graph_def.SerializeToString())
+  # *****************************
 
 
-    each = indexOfCorrectSample[i]
-    newData = ( test_data[each].reshape(1,28,28,1) )
-    newLab = ( test_labels[each].reshape(1) )
+  # ***** (3) Load frozen graph ***** 
+
+  g2 = load_pb('./graph.pb')
+  with g2.as_default():
+      flops = tf.profiler.profile(g2, options = tf.profiler.ProfileOptionBuilder.float_operation())
+      org_flop = flops.total_float_ops
+      print('\t====> FLOP after freezing in the model deployed with Ranger', flops.total_float_ops)
 
 
-    fiCount = 3000
-    sdcCount = 0.
-    for j in range(fiCount):
-      "IMPORTANT: Make sure you're calling the ops from the NEW graph"
-      "In this example, we already replace the ops to be from the new graph (line 700)"
-      test_error, _ = error_rate(eval_in_batches(newData, sess), newLab, True) 
+  # get the FLOPs in the old graph
+  gradef = OLD_SESS.graph.as_graph_def()  #sess.graph()
+  output_graph_def = tf.graph_util.convert_variables_to_constants(OLD_SESS, gradef, [OP_FOR_EVAL.op.name])
 
-      # FI results in SDC
-      if(test_error == 100.):
-        sdcCount += 1
-        eachRes.write(`0`+",")
-      else:
-        eachRes.write(`1` + ",")
-      print(i, j)
+ 
 
+  with tf.gfile.GFile('org-graph.pb', "wb") as f:
+      f.write(output_graph_def.SerializeToString())
+  # *****************************
 
-    eachRes.write("\n")
-    print("sdc:", sdcCount/fiCount)
-    resFile.write(`sdcCount/fiCount` + "," + `fiCount` + "\n")
-    
-  
+  # ***** (3) Load frozen graph *****
+  g2 = load_pb('./org-graph.pb')
+  with g2.as_default():
+      flops = tf.profiler.profile(g2, options = tf.profiler.ProfileOptionBuilder.float_operation())
+      ranger_flop = flops.total_float_ops
+      print('\t====> FLOP after freezing in the original model without Ranger', flops.total_float_ops)
 
-  
+  print()
+  print()
+  print("Below is the FLOP on the models with and without Ranger:")
+  print("Model without Ranger: ", org_flop)
+  print("Model with Ranger", ranger_flop)
 
  
 
