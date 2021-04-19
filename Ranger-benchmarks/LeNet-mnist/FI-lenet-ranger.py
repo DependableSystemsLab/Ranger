@@ -399,8 +399,7 @@ def main(_):
 
     
     # save FI results into file, "eachRes" saves each FI result, "resFile" saves SDC rate
-    if not os.path.isdir("./reluRes"):
-      os.mkdir("./reluRes")
+
     eachRes = open("lenet-eachFI-ranger.csv", "a")
     resFile = open("lenet-randomFI-ranger.csv", "a")
 

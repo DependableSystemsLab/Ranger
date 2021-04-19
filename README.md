@@ -1,4 +1,4 @@
-# Experimental-artifacts-Ranger
+# Experimental artifacts in the paper “A Low-cost Fault Corrector for Deep Neural Networks through Range Restriction”
 
 This repo lists the benchmarks and fault injection tool used in the Ranger paper.
 
@@ -44,8 +44,8 @@ In order to perform fault injections, you can use the script starting with `FI` 
 To calculate the SDC rates you can use the log files written during the fault injection. Otherwise, you can put counters in the fault injection code to measure the average SDC.
 
 
-## How to evaluate Ranger
-(The following commands use the LeNet model in /Ranger-benchmarks/LeNet-mnist/ as an example)
+## Evaluation of Ranger
+(The following commands use the LeNet model and assume you're under the following directory: /Ranger-benchmarks/LeNet-mnist/)
 
 
 ### 1. To evaluate the effectiveness in improving the DNN's error resilience
@@ -80,6 +80,8 @@ You can compare the FLOPs of the model before and after deploying Ranger.
 Replace the current *TensorFI/faultTypes.py* with */TensorFI/16-bit-faultTypes.py* and then perform fault injection as before.
 
 ```
+# In the LeNet example, the default setup is provided so you don't need to replace the file manually. 
+
 python FI-lenet-org-16bit.py
 python FI-lenet-ranger-16bit.py
 ```
