@@ -384,7 +384,7 @@ def main(_):
 
     # we use the inputs that can be correctly identified by the model for FI
     test_error, indexOfCorrectSample = error_rate(eval_in_batches(test_data, sess), test_labels, True)
-    print('Test error on LeNet (without Ranger) : %.1f%%' % test_error)
+    print('Test error on LeNet (with Ranger) : %.1f%%' % test_error)
 
 
     
