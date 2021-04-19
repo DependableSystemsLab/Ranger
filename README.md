@@ -17,7 +17,7 @@ This repo lists the benchmarks and fault injection tool used in the Ranger paper
 
 We provide different ways to implement Ranger.
 
-1. You can use the script */Ranger-benchmarks/auto-trans/auto-transform.py* to automatically transform the TensorFlow graph to insert the operators for range restriction. Template for each model is also provided under the same directory.
+1. You can use the script /Ranger-benchmarks/auto-trans/auto-transform.py to automatically transform the TensorFlow graph to insert the operators for range restriction. Template for each model is also provided under the same directory.
 
 2. You can also manually insert the restriction operators into the source program where you define the model. See */Ranger-benchmarks/vgg16-Imagenet/bounded-vgg16-model-def.py* for an example.
 
@@ -31,7 +31,7 @@ We provide different ways to implement Ranger.
 5		return output
 ```
 
-In the above example, we can simulate Ranger in TensorFI, but not on the source TensorFlow program. This is done in */TensorFI/injectFault.py*. See an example in */Ranger-benchmarks/LeNet-mnist/injectFault.py*
+In the above example, we can simulate Ranger in TensorFI, but not on the source TensorFlow program. This is done in /TensorFI/injectFault.py. See an example in /Ranger-benchmarks/LeNet-mnist/injectFault.py
 
 Currently, the injectFault.py is customized to different models and they can be found in each model's directory.
 
@@ -55,6 +55,8 @@ python FI-lenet-ranger.py
 ```
 You can compare the SDC rate of the model before and after deploying Ranger.
 
+In the LeNet example, you can compare the SDC rates in lenet-randomFI-org.csv and lenet-randomFI-ranger.csv
+
 ### 2. To evaluate the impact of Ranger on accuracy
 
 Evaluate the accuracy of the model (with Ranger inserted) on the validation set. The same way as you do to evaluate the common model.
@@ -77,7 +79,7 @@ You can compare the FLOPs of the model before and after deploying Ranger.
 
 ### 4. To evaluate the effectiveness of Ranger under models using reduced-precision datatype
 
-Replace the current *TensorFI/faultTypes.py* with */TensorFI/16-bit-faultTypes.py* and then perform fault injection as before.
+Replace the current benchmark_folder/TensorFI/faultTypes.py with benchmark_folder/TensorFI/16-bit-faultTypes.py and then perform fault injection as before.
 
 ```
 # In the LeNet example, the default setup is provided so you don't need to replace the file manually. 
@@ -88,11 +90,13 @@ python FI-lenet-ranger-16bit.py
 
 ### 5. To evaluate the effectiveness of Ranger against multi-bit flips
 
-Change the variable ```numOfCurrFault``` in *TensorFI/faultTypes.py*, e.g., ```numOfCurrFault=2``` to enable 2-bit injection per inference. And then you can perform injection experiment as before.
+Change the variable ```numOfCurrFault``` in benchmark_folder/TensorFI/faultTypes.py and benchmark_folder/TensorFI_ranger/faultTypes.py, e.g., ```numOfCurrFault=2``` to enable 2-bit injection per inference. And then you can perform injection experiment as before.
 
 ```
-python FI-lenet-org.py
-python FI-lenet-ranger.py
+# In the LeNet example, the default setup for 2-bit injection is provided so you don't need to modify the variable manually. 
+
+python FI-lenet-org-multi-bit.py
+python FI-lenet-ranger-multi-bit.py
 ```
 
 ## Paper
