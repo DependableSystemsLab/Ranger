@@ -41,7 +41,7 @@ There are two ways to evaluate the models depending on how you implement Ranger:
 
 1. If you implement Ranger using the automation script, you'll just need to evaluate the operator under the new graph (make sure you're using the new graph and evaluating the ops from the new graph). An working example is in */LeNet-mnist/FI-lenet-autoTrans.py*
 
-2. If you implement Ranger via TensorFI (in injectFault.py), you can replace the injectFault.py file with the one in the TensorFI directory. For the ease of execution, we have two different TensorFI modules under each benchmark's directory, these two modules will *override* the default TensorFI module (so that you don't have to replace the file manually). 
+2. If you implement Ranger via TensorFI (in injectFault.py), you can replace the injectFault.py file with the one in the TensorFI directory. For the ease of execution, we have two different TensorFI modules under each benchmark's directory, these two modules will *override* the default TensorFI module (so that you don't have to replace the file manually), so *you'll need to ensure your working path is under each benchmark's directory*. 
 
 How to run: run the programs in the following format: `FI_model_org.py` (which imports the TensorFI module without Ranger) or `FI_model_ranger.py` (which imports the TensorFI module with Ranger enabled). 
 

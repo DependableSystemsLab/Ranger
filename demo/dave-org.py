@@ -13,8 +13,6 @@ from argparse import ArgumentParser
 os.environ["CUDA_VISIBLE_DEVICES"] = "-1" 
 
 parser = ArgumentParser()
-
-
 parser.add_argument('--isInsertRanger', type=lambda x: (str(x).lower() == 'true'), default=False,
                     help="flag to decide whether inserting Ranger into the model") 
 parser.add_argument('--input', type=str,
@@ -25,24 +23,14 @@ parser.add_argument('--saveTFboard', type=lambda x: (str(x).lower() == 'true'), 
                     help="save summary into tensorboard logs") 
 parser.add_argument('--showNode', type=lambda x: (str(x).lower() == 'true'), default=False,
                     help="show num of nodes in the graph (from the target op)") 
-
-
-
-
 args = parser.parse_args() 
 
 
 
-"You need to provide the pre-trained weights"
-"or you can train the model by yourself"
+
 sess = tf.InteractiveSession(  )
 saver = tf.train.Saver()
 saver.restore(sess, "save/model.ckpt")
-
-#tx, ty = driving_data.LoadWholeSet() # you can try to load the whole/test/training set
-
-# file for saving results
-resFile = open("fi-result.csv", "a")
 
 
 OP_FOR_EVAL = model.y
@@ -51,27 +39,8 @@ INPUT_keep_prob = model.keep_prob
 
 
 
-
-
-
-
-
-
-
-
-
-#if(args.isInsertRanger):
-#  print("insert ranger")
-
-
-
-
-
-
-
 if args.isFI:
   fi = ti.TensorFI(sess, logLevel = 50, name = "convolutional", disableInjections=True)
-
 
 
 print("")

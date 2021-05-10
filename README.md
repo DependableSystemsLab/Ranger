@@ -4,7 +4,7 @@ This repo lists the benchmarks and fault injection tool used in the Ranger paper
 
 - */TensorFI* includes the fault injection tool (TensorFI). We've made some changes to the tool (mainly in */TensorFI/injectFault.py*), to support the capability of injection in all the benchmarks we've used. 
 - */Ranger-benchmarks* contains all the DNN benchmarks and experimental infrastructure.
-- */dave-driving* contains a sample DNN benchmark where we've provided the scripts to automate the deployment of Ranger. More details are available in README file in the */dave-driving* directory.
+- */demo* contains a demo on how to integrate Ranger into a self-driving DNN model. More details are available in README file in the */demo* directory.
 
 
 ## Installation
@@ -45,7 +45,7 @@ To calculate the SDC rates you can use the log files written during the fault in
 
 
 ## Evaluation of Ranger
-(The following commands use the LeNet model and assume you're under the following directory: */Ranger-benchmarks/LeNet-mnist/*)
+(The following commands use the LeNet model and *assume you're under the following directory: /Ranger-benchmarks/LeNet-mnist/*)
 
 
 ### 1. To evaluate the effectiveness in improving the DNN's error resilience

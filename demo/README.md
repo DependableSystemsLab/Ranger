@@ -19,10 +19,13 @@ This will generate the *code* for deriving the restriction bounds from a specifi
 - The third argument: line number in the TF program, after which the new snippet of code will be added.
 - The forth argument: The template config file used in the **second** phase to insert Ranger.
 
+
 1.2.
 
 Run the TF program with code inserted, e.g., get_act_dist.py
-This will output the restriction values for different layers and also automatically populate these values into the config file for the second phase deployment - this will be outputted as a new file new.yaml.
+This will output the restriction values for different layers and also automatically populate these values into the config file for the second phase deployment - this will be outputed as a new file new.yaml.
+
+NOTE: You can skip the profiling step and directly go to the second step by using the parameters in *default.yaml*.
 
 ## 2. Insert range restriction operators
 
