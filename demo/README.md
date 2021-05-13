@@ -21,7 +21,6 @@ This will generate the *code* for deriving the restriction bounds from a specifi
 
 
 1.2.
-
 Run ```python get_act_dist.py```
 
 This will output the restriction values for different layers and also automatically populate these values into the config file for the second phase deployment - this will be outputed as a new file *new.yaml*.
@@ -45,6 +44,7 @@ The code for automated insertion is written in *ranger.py*.
 ## 3. Evaluate the effectiveness of Ranger
 
 ```python dave-org.py --input sample_inputs/1000.jpg --isFI true``` 
+
 ```python dave-new.py --input sample_inputs/1000.jpg --isFI true```
 
 You can compare the output from *dave-new.py* and that from *Dave-org.py* by injecting the same fault (default setup is provided).
