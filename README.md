@@ -13,36 +13,6 @@ This repo lists the benchmarks and fault injection tool used in the Ranger paper
   * Then also install opencv and keras.
   * We recommend using conda for installation.
 
-## Implementation of Ranger
-
-We provide different ways to implement Ranger.
-
-1. You can use the script */Ranger-benchmarks/auto-trans/auto-transform.py* to automatically transform the TensorFlow graph to insert the operators for range restriction. Template for each model is also provided under the same directory.
-
-2. You can also manually insert the restriction operators into the source program where you define the model. See */Ranger-benchmarks/vgg16-Imagenet/bounded-vgg16-model-def.py* for an example.
-
-3. If you don't want to insert the script for automation into your source program, you can also evaluate the effectiveness of Ranger by *simulating Ranger in the fault injection tool*. This is because the tool (TensorFI) *duplicates* the original TensorFlow graph (for the purpose of fault injection), where we can insert range check during fault injection process. Below is an example:
-
-```
-1	def relu(input): # this is the customized implementation of ReLu from the TensorFI tool in injectFault.py
-2		output = relu(input)
-3		output = tf.minimum(output, upBound) # insert range check
-4		output = tf.maximum(output, lowBound) # insert range check
-5		return output
-```
-
-In the above example, we can simulate Ranger in TensorFI, but not on the source TensorFlow program. This is done in */TensorFI/injectFault.py*. See an example in */Ranger-benchmarks/LeNet-mnist/injectFault.py*
-
-Currently, the injectFault.py is customized to different models and they can be found in each model's directory.
-
-In order to perform fault injections, you can use the script starting with `FI` under each benchmark directory. 
-
-- To perform fault injection *without* Ranger enabled, run the Python program in the following format: `FI_model_org.py` (under each benchmark's directory)
-- To perform the experiment *with* ranger enabled, run the Python program in the following format: `FI_model_ranger.py` (under each benchmark's directory)
-
-
-To calculate the SDC rates you can use the log files written during the fault injection. Otherwise, you can put counters in the fault injection code to measure the average SDC.
-
 
 ## Evaluation of Ranger
 (The following commands use the LeNet model and *assume you're under the following directory: /Ranger-benchmarks/LeNet-mnist/*)
@@ -102,6 +72,36 @@ python FI-lenet-ranger-multi-bit.py
 ```
 
 In the LeNet example, the SDC rates are saved in *lenet-randomFI-org-multiBit.csv* and *lenet-randomFI-ranger-multiBit.csv*
+
+## Implementation of Ranger
+
+We provide different ways to implement Ranger.
+
+1. You can use the script */Ranger-benchmarks/auto-trans/auto-transform.py* to automatically transform the TensorFlow graph to insert the operators for range restriction. Template for each model is also provided under the same directory.
+
+2. You can also manually insert the restriction operators into the source program where you define the model. See */Ranger-benchmarks/vgg16-Imagenet/bounded-vgg16-model-def.py* for an example.
+
+3. If you don't want to insert the script for automation into your source program, you can also evaluate the effectiveness of Ranger by *simulating Ranger in the fault injection tool*. This is because the tool (TensorFI) *duplicates* the original TensorFlow graph (for the purpose of fault injection), where we can insert range check during fault injection process. Below is an example:
+
+```
+1	def relu(input): # this is the customized implementation of ReLu from the TensorFI tool in injectFault.py
+2		output = relu(input)
+3		output = tf.minimum(output, upBound) # insert range check
+4		output = tf.maximum(output, lowBound) # insert range check
+5		return output
+```
+
+In the above example, we can simulate Ranger in TensorFI, but not on the source TensorFlow program. This is done in */TensorFI/injectFault.py*. See an example in */Ranger-benchmarks/LeNet-mnist/injectFault.py*
+
+Currently, the injectFault.py is customized to different models and they can be found in each model's directory.
+
+In order to perform fault injections, you can use the script starting with `FI` under each benchmark directory. 
+
+- To perform fault injection *without* Ranger enabled, run the Python program in the following format: `FI_model_org.py` (under each benchmark's directory)
+- To perform the experiment *with* ranger enabled, run the Python program in the following format: `FI_model_ranger.py` (under each benchmark's directory)
+
+
+To calculate the SDC rates you can use the log files written during the fault injection. Otherwise, you can put counters in the fault injection code to measure the average SDC.
 
 
 ## Paper
